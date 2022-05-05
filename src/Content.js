@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Divider, List, ListItem, ListItemText } from '@mui/material';
 import { fetchLikedFormSubmissions } from './service/mockServer';
 import styles from "./Content.module.css"
 
@@ -45,8 +45,7 @@ export default function Content(props) {
     <Box sx={{ marginTop: 3 }}>
       <Typography variant="h4">Liked Form Submissions</Typography>
 
-      <Typography variant="body1" sx={{ fontStyle: 'italic', marginTop: 1 }}>
-        {/* List items map */}
+      <Typography variant="body1" sx={{ marginTop: 1 }}>
         {fetchLoading &&
           <div>
             <CircularProgress />
@@ -54,14 +53,22 @@ export default function Content(props) {
           </div>
         }
         {!fetchLoading && likedList.length === 0 && emptyListMessage}
-        <ul className={styles.likedList}>
-          {likedList.length > 0 && likedList.map(
-            toast =>
-              <li key={toast.id}>
-                <b>Name: </b>{toast.data.firstName} {toast.data.lastName} -- <b>Email: </b>{toast.data.email}
-              </li>)
-          }
-        </ul>
+
+        <List sx={{ width: '100%', maxWidth: 300, bgcolor: 'background.paper' }}>
+          {likedList.length > 0 && likedList.map(toast => {
+            return (
+              <React.Fragment>
+                <ListItem alignItems="flex-start" key={toast.id}>
+                  <ListItemText
+                  primary={`Name: ${toast.data.firstName} ${toast.data.lastName}`}
+                  secondary={`Email: ${toast.data.email}`}
+                  />
+                </ListItem>
+                <Divider component="li" />
+              </React.Fragment>
+            )
+          })}
+        </List>
       </Typography>
     </Box>
   );
