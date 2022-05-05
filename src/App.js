@@ -10,10 +10,10 @@ import Content from './Content';
 function App() {
   const [toastData, setToastData] = useState([]);
   const [currentToast, setCurrentToast] = useState(undefined);
+  const [likedToast, setLikedToast] = useState(undefined);
+
 
   const [open, setOpen] = useState(false); //used in snackbar
-
-  // liked state
 
   //One off setting the onMessage callback on first load
   useEffect(() => {
@@ -50,18 +50,35 @@ function App() {
     setCurrentToast(undefined);
   };
 
+  //handles saving the toast to the "db"/localstorage
+  const saveLike = async (likedToast) => {
+    try {
+      await saveLikedFormSubmission(likedToast);
+    } catch (error) {
+      console.log(error);
+      saveLike(likedToast);
+    }
+  }
 
-  //like handler/ data
-  //save liked toast to "db" and loop if fails
+  //handles updating likedToast state/passing it to the content for display and triggering the save to
+  //localstorage function
+  const handleLike = () => {
+    const likedToastTrue = currentToast;
+    likedToastTrue.data.liked = true;
+    setLikedToast(likedToastTrue);
+    setOpen(false);
+    saveLike(likedToastTrue);
+  }
 
   return (
     <>
       <Header />
       <Container>
-        <Content />
+        <Content likedToast={likedToast} />
       </Container>
       <Snackbar
         key={currentToast ? currentToast.id : undefined}
+        sx={{ "& .MuiSnackbarContent-root": { "border-radius": 0, color: "#E3E4E4" } }}
         open={open}
         TransitionProps={{ onExited: handleExited }}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
@@ -75,7 +92,7 @@ function App() {
         }
         action={
           <React.Fragment>
-            <Button color="primary" size="small" >
+            <Button size="small" onClick={handleLike} sx={{ color: "#8FEFEF" }}>
               Like
             </Button>
             <IconButton
@@ -84,7 +101,7 @@ function App() {
               sx={{ p: 0.5 }}
               onClick={handleClose}
             >
-              <CloseIcon />
+              <CloseIcon sx={{ color: "#E3E4E4" }} />
             </IconButton>
           </React.Fragment>
         }
