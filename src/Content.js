@@ -3,8 +3,6 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { CircularProgress, Divider, List, ListItem, ListItemText } from '@mui/material';
 import { fetchLikedFormSubmissions } from './service/mockServer';
-import styles from "./Content.module.css"
-
 
 export default function Content(props) {
   const [fetchLoading, setFetchLoading] = useState(true);
@@ -39,26 +37,24 @@ export default function Content(props) {
     if (props.likedToast) { setLikedList((prevState) => [...prevState, props.likedToast]) }
   }, [props.likedToast])
 
-  console.log(likedList)
-  console.log(fetchLoading)
   return (
     <Box sx={{ marginTop: 3 }}>
       <Typography variant="h4">Liked Form Submissions</Typography>
-
-      <Typography variant="body1" sx={{ marginTop: 1 }}>
-        {fetchLoading &&
+      {fetchLoading &&
           <div>
             <CircularProgress />
             <h2>Checking for liked data</h2>
           </div>
         }
+
+
         {!fetchLoading && likedList.length === 0 && emptyListMessage}
 
-        <List sx={{ width: '100%', maxWidth: 300, bgcolor: 'background.paper' }}>
+        <List aria-label="Liked List" sx={{ width: '100%', maxWidth: 300, bgcolor: 'background.paper' }}>
           {likedList.length > 0 && likedList.map(toast => {
             return (
-              <React.Fragment>
-                <ListItem alignItems="flex-start" key={toast.id}>
+              <React.Fragment key={toast.id}>
+                <ListItem aria-label="Liked Item" alignItems="flex-start" >
                   <ListItemText
                   primary={`Name: ${toast.data.firstName} ${toast.data.lastName}`}
                   secondary={`Email: ${toast.data.email}`}
@@ -69,7 +65,6 @@ export default function Content(props) {
             )
           })}
         </List>
-      </Typography>
     </Box>
   );
 }

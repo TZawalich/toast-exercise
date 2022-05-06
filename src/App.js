@@ -78,7 +78,7 @@ function App() {
       </Container>
       <Snackbar
         key={currentToast ? currentToast.id : undefined}
-        sx={{ "& .MuiSnackbarContent-root": { "border-radius": 0, color: "#E3E4E4" } }}
+        sx={{ "& .MuiSnackbarContent-root": { "borderRadius": 0, color: "#E3E4E4" } }}
         open={open}
         TransitionProps={{ onExited: handleExited }}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
